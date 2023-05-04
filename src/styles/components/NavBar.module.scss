@@ -1,0 +1,14 @@
+.navBr {
+  background-color: transparent;
+  font-family: var(--font-mono);
+}
+.nameFlex {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .nameFlex {
+    display: flex;
+    align-items: center;
+  }
+}
