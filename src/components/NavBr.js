@@ -18,10 +18,10 @@ const NavBr = (props) => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="">
               <Nav.Link href="/" as={Link}>
-                Home
+                Lista de Projectos
               </Nav.Link>
-              <Nav.Link href="/about" as={Link}>
-                Acerca de Nosotros
+              <Nav.Link href="/createproject" as={Link}>
+                Agregar Projecto
               </Nav.Link>
               
             </Nav>
