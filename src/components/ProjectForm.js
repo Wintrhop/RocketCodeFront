@@ -139,7 +139,7 @@ const ProjectForm = () => {
         )}
 
         <Button className={styles.signInBtn} variant="primary" type="submit">
-          Crear Projecto
+          Crear Proyecto
         </Button>
       </Form>
     </div>
