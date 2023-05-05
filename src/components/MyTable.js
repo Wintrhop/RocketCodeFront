@@ -1,9 +1,10 @@
 import React from "react";
 import Table from "react-bootstrap/Table";
+import styles from "../styles/components/table.module.scss"
 
 const MyTable = ({ items }) => {
   return (
-    <Table striped="columns">
+    <Table striped="columns" className={styles.table}>
       <thead>
         <tr>
           <th>Nombre del cliente</th>
