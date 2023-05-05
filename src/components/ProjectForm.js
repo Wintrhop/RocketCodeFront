@@ -25,7 +25,9 @@ const CREATE_CLIENT = gql`
 `;
 
 const ProjectForm = () => {
-  const [createClient, { data, loading, error }] = useMutation(CREATE_CLIENT);
+  const [createClient, { data, loading, error }] = useMutation(CREATE_CLIENT,{
+    refetchQueries:['clients']
+  });
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (e) => {
