@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import styles from "../styles/components/ProjectForm.module.scss";
 import { gql, useMutation } from "@apollo/client";
 import LoadingSpinner from "./LoadingSpinner";
+import { GET_CLIENTS } from "@/pages";
 
 const CREATE_CLIENT = gql`
   mutation Create(
@@ -26,7 +27,7 @@ const CREATE_CLIENT = gql`
 
 const ProjectForm = () => {
   const [createClient, { data, loading, error }] = useMutation(CREATE_CLIENT,{
-    refetchQueries:['clients']
+    refetchQueries:[{ query: GET_CLIENTS }]
   });
   const [validated, setValidated] = useState(false);
 
