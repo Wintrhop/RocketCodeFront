@@ -3,6 +3,17 @@ import "bootstrap/dist/css/bootstrap.css";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import NavBr from "@/components/NavBr";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "https://rocketcodebackend.onrender.com/",
+  cache: new InMemoryCache(),
+});
 
 export default function App({ Component, pageProps }) {
   const router = useRouter();
@@ -13,8 +24,10 @@ export default function App({ Component, pageProps }) {
   }, [router.events]);
   return (
     <>
-      <NavBr />
-      <Component {...pageProps} />
+      <ApolloProvider client={client}>
+        <NavBr />
+        <Component {...pageProps} />
+      </ApolloProvider>
     </>
   );
 }

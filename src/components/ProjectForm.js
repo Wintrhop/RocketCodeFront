@@ -2,13 +2,36 @@ import React, { useState } from "react";
 import { FloatingLabel, Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 import styles from "../styles/components/ProjectForm.module.scss";
+import { gql, useMutation } from "@apollo/client";
+import LoadingSpinner from "./LoadingSpinner";
+
+const CREATE_CLIENT = gql`
+  mutation Create(
+    $name: String
+    $projectValue: Int
+    $projectDepartment: String
+    $city: String
+  ) {
+    create(
+      name: $name
+      projectValue: $projectValue
+      projectDepartment: $projectDepartment
+      city: $city
+    ) {
+      name
+      projectValue
+    }
+  }
+`;
 
 const ProjectForm = () => {
+  const [createClient, { data, loading, error }] = useMutation(CREATE_CLIENT);
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = async (e) => {
     const form = e.currentTarget;
     e.preventDefault();
+
     if (form.checkValidity() === false) {
       e.stopPropagation();
     }
@@ -22,18 +45,15 @@ const ProjectForm = () => {
         const pDepartment = form.proectDepartment.value;
         const city = form.city.value;
 
-        const user = {
-          username,
-          pValue,
-          pDepartment,
-          city,
-        };
+        createClient({
+          variables: {
+            name: username,
+            projectValue: Number(pValue),
+            projectDepartment: pDepartment,
+            city: city,
+          },
+        });
 
-        // const { data } = await axios.post(
-        //   `${process.env.NEXT_PUBLIC_INVENTORY_BACK_API}/auth/local/logIn`,
-        //   user
-        // );
-        console.log("datos", user);
         Swal.fire({
           toast: true,
           position: "top",
@@ -43,10 +63,11 @@ const ProjectForm = () => {
           icon: "success",
           title: "Proyecto Creado",
         });
-        form.name.value ="";
-        form.projectValue.value="";
-        form.proectDepartment.value="";
-        form.city.value="";
+
+        form.name.value = "";
+        form.projectValue.value = "";
+        form.proectDepartment.value = "";
+        form.city.value = "";
         setValidated(false);
       } catch (error) {
         Swal.fire({
@@ -82,7 +103,6 @@ const ProjectForm = () => {
               id="projectValue"
               type="number"
               placeholder="1.000"
-              
             />
             <Form.Control.Feedback type="invalid">
               Debe ingresar una Cantidad
@@ -96,7 +116,6 @@ const ProjectForm = () => {
               id="proectDepartment"
               type="text"
               placeholder="Department"
-              
             />
             <Form.Control.Feedback type="invalid">
               Debe ingresar un departamento del proyecto
@@ -105,18 +124,18 @@ const ProjectForm = () => {
         </Form.Group>
         <Form.Group>
           <FloatingLabel label="Ciudad" className="mb-4">
-            <Form.Control
-              required
-              id="city"
-              type="text"
-              placeholder="city"
-              
-            />
+            <Form.Control required id="city" type="text" placeholder="city" />
             <Form.Control.Feedback type="invalid">
               Debe ingresar una Ciudad
             </Form.Control.Feedback>
           </FloatingLabel>
         </Form.Group>
+        {loading ? (
+          <LoadingSpinner loadState={true} elementToRend={<></>} />
+        ) : (
+          <></>
+        )}
+
         <Button className={styles.signInBtn} variant="primary" type="submit">
           Crear Projecto
         </Button>

@@ -2,13 +2,33 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.scss";
-import {EmptyTable} from "../components/EmptyTable";
-const list = [];
+import { EmptyTable } from "../components/EmptyTable";
+import { gql, useQuery } from "@apollo/client";
+import MyTable from "@/components/MyTable";
+import { useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
+
 const inter = Inter({ subsets: ["latin"] });
 
+const GET_CLIENTS = gql`
+  query clients {
+    clients {
+      id
+      name
+      projectValue
+      projectDepartment
+      city
+    }
+  }
+`;
+
 export default function Home() {
-const itemsRedirect = EmptyTable(list);
-if (itemsRedirect.length===0) return null;
+  const { data, loading, error } = useQuery(GET_CLIENTS);
+  let clients;
+  if (loading === false) {
+    clients = data.clients;
+  }
+
   return (
     <>
       <Head>
@@ -18,7 +38,22 @@ if (itemsRedirect.length===0) return null;
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <div>aqui la tabla</div>
+        
+          {loading ? (
+            <LoadingSpinner loadState={true} elementToRend={null} />
+          ) : (
+            null
+          )}
+        
+        {loading === false ? (
+          !clients[0] ? (
+            <div>Lista de clientes vacia, debes agregar un nuevo proyecto</div>
+          ) : (
+            <MyTable items={clients} />
+          )
+        ) : (
+          null
+        )}
       </main>
     </>
   );
